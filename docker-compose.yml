@@ -1,5 +1,4 @@
 # ./docker-compose.yml
-version: "3.9"
 services:
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
@@ -41,8 +40,15 @@ services:
   scraper:
     build: ./services/scraper
     depends_on: [es]
-       # placeholder
-
+    environment:
+      ES_HOST: http://es:9200
+      ES_INDEX: games
+      SCRAPE_URLS_FILE: /app/urls.txt
+      CONCURRENCY: 2
+      DELAY_SEC: 3.0
+    volumes:
+      - ./data/urls.txt:/app/urls.txt:ro
+    
   grafana:
     image: grafana/grafana:11.1.0
     ports: ["3000:3000"]
