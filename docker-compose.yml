@@ -30,18 +30,18 @@ services:
   api:
     build: ./services/api
     depends_on: [es, postgres, redis]
-    command: ["sleep","3600"]   # placeholder
+       # placeholder
     ports: ["8000:8000"]
 
   worker:
     build: ./services/worker
     depends_on: [redis, es, postgres]
-    command: ["sleep","3600"]   # placeholder
+       # placeholder
 
   scraper:
     build: ./services/scraper
     depends_on: [es]
-    command: ["sleep","3600"]   # placeholder
+       # placeholder
 
   grafana:
     image: grafana/grafana:11.1.0
