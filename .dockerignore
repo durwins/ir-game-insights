@@ -1,0 +1,18 @@
+# ./.dockerignore
+.git
+.gitignore
+.github
+__pycache__/
+*.py[cod]
+.venv/
+env/
+venv/
+build/
+dist/
+*.egg-info/
+*.log
+data/
+cache/
+tmp/
+.DS_Store
+Thumbs.db

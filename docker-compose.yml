@@ -1,0 +1,62 @@
+# ./docker-compose.yml
+version: "3.9"
+services:
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
+    ulimits:
+      memlock: { soft: -1, hard: -1 }
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports: ["9200:9200","9300:9300"]
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: app
+      POSTGRES_DB: gamedata
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports: ["5432:5432"]
+
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]
+
+  api:
+    build: ./services/api
+    depends_on: [es, postgres, redis]
+    command: ["sleep","3600"]   # placeholder
+    ports: ["8000:8000"]
+
+  worker:
+    build: ./services/worker
+    depends_on: [redis, es, postgres]
+    command: ["sleep","3600"]   # placeholder
+
+  scraper:
+    build: ./services/scraper
+    depends_on: [es]
+    command: ["sleep","3600"]   # placeholder
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    ports: ["3000:3000"]
+    volumes:
+      - grafana:/var/lib/grafana
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.4
+    environment:
+      ELASTICSEARCH_HOSTS: "http://es:9200"
+    ports: ["5601:5601"]
+    depends_on: [es]
+
+volumes:
+  esdata:
+  pgdata:
+  grafana:
