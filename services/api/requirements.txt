@@ -1,0 +1,5 @@
+﻿# ./services/api/requirements.txt
+fastapi==0.112.0
+uvicorn[standard]==0.30.3
+elasticsearch==8.13.1
+pydantic==2.8.2
