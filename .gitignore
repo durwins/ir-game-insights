@@ -1,0 +1,26 @@
+# ./.gitignore
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+build/
+dist/
+*.egg-info/
+*.log
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+.ipynb_checkpoints
+docker-compose.override.yml
+.vscode/
+.idea/
+*.swp
+data/
+cache/
+tmp/
+.DS_Store
+Thumbs.db
+scripts/*
