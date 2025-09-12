@@ -1,0 +1,25 @@
+﻿{
+  "mappings": {
+    "properties": {
+      "store": { "type": "keyword" },
+      "app_id": { "type": "keyword" },
+      "title": { "type": "text", "analyzer": "persian", "search_analyzer": "persian" },
+      "developer": { "type": "keyword" },
+      "genre": { "type": "keyword" },
+      "installs": { "type": "long" },
+      "rating": { "type": "float" },
+      "ratings_count": { "type": "long" },
+      "size_mb": { "type": "float" },
+      "released_at": { "type": "date" },
+      "updated_at": { "type": "date" },
+      "monetization": { "type": "keyword" },
+      "description": { "type": "text", "analyzer": "persian", "search_analyzer": "persian" },
+      "desc_topics": { "type": "keyword" },
+      "desc_marketing_terms": { "type": "keyword" },
+      "update_frequency_per_year": { "type": "float" },
+      "screenshot_style": { "type": "keyword" },
+      "palette_dominants": { "type": "keyword" },
+      "feature_flags": { "type": "keyword" }
+    }
+  }
+}

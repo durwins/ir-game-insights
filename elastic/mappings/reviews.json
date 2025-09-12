@@ -1,0 +1,14 @@
+﻿{
+  "mappings": {
+    "properties": {
+      "store": { "type": "keyword" },
+      "app_id": { "type": "keyword" },
+      "created_at": { "type": "date" },
+      "rating": { "type": "integer" },
+      "text": { "type": "text", "analyzer": "persian", "search_analyzer": "persian" },
+      "sentiment": { "type": "keyword" },
+      "sentiment_score": { "type": "float" },
+      "topics": { "type": "keyword" }
+    }
+  }
+}
