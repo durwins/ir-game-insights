@@ -1,0 +1,16 @@
+apiVersion: 1
+datasources:
+  - name: ES Games
+    type: elasticsearch
+    access: proxy
+    url: http://es:9200
+    jsonData:
+      index: games
+      timeField: indexed_at
+      esVersion: 8
+      interval: Daily
+      logMessageField: ""
+      logLevelField: ""
+      includeFrozen: false
+      maxConcurrentShardRequests: 5
+    isDefault: true
