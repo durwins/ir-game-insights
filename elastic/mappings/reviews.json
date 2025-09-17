@@ -1,14 +1,40 @@
-﻿{
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "analysis": {
+      "normalizer": {
+        "keyword_lower": {
+          "type": "custom",
+          "char_filter": [],
+          "filter": ["lowercase", "asciifolding"]
+        }
+      }
+    }
+  },
   "mappings": {
+    "dynamic": "false",
     "properties": {
-      "store": { "type": "keyword" },
-      "app_id": { "type": "keyword" },
-      "created_at": { "type": "date" },
-      "rating": { "type": "integer" },
-      "text": { "type": "text", "analyzer": "persian", "search_analyzer": "persian" },
-      "sentiment": { "type": "keyword" },
+      "store":       { "type": "keyword", "ignore_above": 256, "normalizer": "keyword_lower" },
+      "app_id":      { "type": "keyword", "ignore_above": 512, "normalizer": "keyword_lower" },
+      "app_title":   { "type": "keyword", "ignore_above": 512, "normalizer": "keyword_lower" },
+
+      "author":      { "type": "keyword", "ignore_above": 512, "normalizer": "keyword_lower" },
+      "rating":      { "type": "integer" },
+
+      "text": {
+        "type": "text",
+        "analyzer": "persian",
+        "search_analyzer": "persian"
+      },
+
+      "sentiment":       { "type": "keyword", "ignore_above": 64, "normalizer": "keyword_lower" },
       "sentiment_score": { "type": "float" },
-      "topics": { "type": "keyword" }
+      "topics":          { "type": "keyword", "ignore_above": 256, "normalizer": "keyword_lower" },
+
+      "created_at":  { "type": "date" },
+      "indexed_at":  { "type": "date" },
+      "source_url":  { "type": "keyword", "ignore_above": 1024 }
     }
   }
 }

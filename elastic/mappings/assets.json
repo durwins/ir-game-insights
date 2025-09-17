@@ -1,0 +1,22 @@
+{
+  "settings": {
+    "number_of_shards": 1, "number_of_replicas": 0,
+    "analysis": { "normalizer": { "keyword_lower": {
+      "type": "custom", "char_filter": [], "filter": ["lowercase","asciifolding"]
+    }}}
+  },
+  "mappings": {
+    "dynamic": "false",
+    "properties": {
+      "store":     { "type": "keyword", "normalizer": "keyword_lower" },
+      "app_id":    { "type": "keyword", "normalizer": "keyword_lower" },
+      "app_title": { "type": "keyword", "normalizer": "keyword_lower" },
+      "type":      { "type": "keyword" },
+      "url":       { "type": "keyword", "ignore_above": 2048 },
+      "width":     { "type": "integer" },
+      "height":    { "type": "integer" },
+      "indexed_at":{ "type": "date" },
+      "source_url":{ "type": "keyword", "ignore_above": 2048 }
+    }
+  }
+}
