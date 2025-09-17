@@ -1,25 +1,65 @@
-﻿{
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "analysis": {
+      "normalizer": {
+        "keyword_lower": {
+          "type": "custom",
+          "char_filter": [],
+          "filter": ["lowercase", "asciifolding"]
+        }
+      }
+    }
+  },
   "mappings": {
+    "dynamic": "false",
     "properties": {
-      "store": { "type": "keyword" },
-      "app_id": { "type": "keyword" },
-      "title": { "type": "text", "analyzer": "persian", "search_analyzer": "persian" },
-      "developer": { "type": "keyword" },
-      "genre": { "type": "keyword" },
-      "installs": { "type": "long" },
-      "rating": { "type": "float" },
-      "ratings_count": { "type": "long" },
-      "size_mb": { "type": "float" },
-      "released_at": { "type": "date" },
-      "updated_at": { "type": "date" },
-      "monetization": { "type": "keyword" },
-      "description": { "type": "text", "analyzer": "persian", "search_analyzer": "persian" },
-      "desc_topics": { "type": "keyword" },
-      "desc_marketing_terms": { "type": "keyword" },
-      "update_frequency_per_year": { "type": "float" },
-      "screenshot_style": { "type": "keyword" },
-      "palette_dominants": { "type": "keyword" },
-      "feature_flags": { "type": "keyword" }
+      "store":            { "type": "keyword", "ignore_above": 256, "normalizer": "keyword_lower" },
+      "app_id":           { "type": "keyword", "ignore_above": 512, "normalizer": "keyword_lower" },
+
+      "title": {
+        "type": "text",
+        "analyzer": "persian",
+        "search_analyzer": "persian",
+        "fields": {
+          "raw": { "type": "keyword", "ignore_above": 512, "normalizer": "keyword_lower" }
+        }
+      },
+      "developer":        { "type": "keyword", "ignore_above": 512, "normalizer": "keyword_lower" },
+      "genre":            { "type": "keyword", "ignore_above": 256, "normalizer": "keyword_lower" },
+      "feature_flags":    { "type": "keyword", "ignore_above": 256, "normalizer": "keyword_lower" },
+
+      "description": {
+        "type": "text",
+        "analyzer": "persian",
+        "search_analyzer": "persian"
+      },
+
+      "desc_topics":         { "type": "keyword", "ignore_above": 256, "normalizer": "keyword_lower" },
+      "desc_marketing_terms":{ "type": "keyword", "ignore_above": 256, "normalizer": "keyword_lower" },
+
+      "monetization":     { "type": "keyword", "ignore_above": 128, "normalizer": "keyword_lower" },
+
+      "rating":           { "type": "float" },
+      "ratings_count":    { "type": "long" },
+      "installs":         { "type": "long" },
+
+      "file_size_bytes":  { "type": "long" },
+      "size_mb":          { "type": "float" },
+
+      "screenshot_count": { "type": "integer" },
+      "video_count":      { "type": "integer" },
+
+      "palette_dominants":{ "type": "keyword", "ignore_above": 128, "normalizer": "keyword_lower" },
+      "screenshot_style": { "type": "keyword", "ignore_above": 128, "normalizer": "keyword_lower" },
+
+      "released_at":      { "type": "date" },
+      "updated_at":       { "type": "date" },
+      "indexed_at":       { "type": "date" },
+
+      "source_url":       { "type": "keyword", "ignore_above": 1024 },
+      "update_frequency_per_year": { "type": "float" }
     }
   }
 }

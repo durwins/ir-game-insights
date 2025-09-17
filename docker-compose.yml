@@ -17,9 +17,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 30
+    restart: unless-stopped
 
   es-init:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    image: curlimages/curl:8.5.0
     depends_on:
       es:
         condition: service_healthy
@@ -30,8 +31,9 @@ services:
        echo "Waiting for ES...";
        for i in $(seq 1 60); do curl -fsS "$$ES_URL" && break || sleep 2; done;
        echo "Creating indices if missing...";
-       (curl -fsI "$$ES_URL/games"   >/dev/null || curl -fsS -X PUT "$$ES_URL/games"   -H "Content-Type: application/json" --data-binary @/mappings/games.json);
-       (curl -fsI "$$ES_URL/reviews" >/dev/null || curl -fsS -X PUT "$$ES_URL/reviews" -H "Content-Type: application/json" --data-binary @/mappings/reviews.json);
+       (curl -fsI "$$ES_URL/games"    >/dev/null || curl -fsS -X PUT "$$ES_URL/games"    -H "Content-Type: application/json" --data-binary @/mappings/games.json);
+       (curl -fsI "$$ES_URL/reviews"  >/dev/null || curl -fsS -X PUT "$$ES_URL/reviews"  -H "Content-Type: application/json" --data-binary @/mappings/reviews.json);
+       (curl -fsI "$$ES_URL/assets"   >/dev/null || curl -fsS -X PUT "$$ES_URL/assets"   -H "Content-Type: application/json" --data-binary @/mappings/assets.json);
        echo "OK";'
     environment:
       ES_URL: http://es:9200
@@ -53,6 +55,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    restart: unless-stopped
 
   redis:
     image: redis:7
@@ -62,6 +65,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+    restart: unless-stopped
 
   scraper:
     build: ./services/scraper
@@ -75,33 +79,40 @@ services:
     environment:
       ES_HOST: http://es:9200
       ES_INDEX: games
+      ES_REVIEWS_INDEX: reviews
+      ES_ASSETS_INDEX: assets
       REDIS_URL: redis://redis:6379/0
-      CONCURRENCY: 3
-      DELAY_SEC: 4.0
-      MAX_PAGES: 600
-      MAX_APPS: 2000
+      CONCURRENCY: 8
+      DELAY_SEC: 2.0
+      MAX_PAGES: 60
+      MAX_APPS: 200
       SAME_DOMAIN_ONLY: "1"
-      # Auto-discover Myket
+      # Auto-discover
       MYKET_AUTO_DISCOVER: "1"
       MYKET_GAMES_ROOT: "https://myket.ir/games"
-      MYKET_MAX_LISTS: "300"
+      MYKET_MAX_LISTS: "20"
       BAZAAR_AUTO_DISCOVER: "1"
       BAZAAR_ROOT: "https://cafebazaar.ir/pages/list~app-category~game-categories"
-      BAZAAR_MAX_LISTS: "200"
-      # FOLLOW_LIST_LINKS: "0"
+      BAZAAR_MAX_LISTS: "20"
+      ENABLE_REVIEWS: "1"
+      ENABLE_AJAX_REVIEWS: "1"   # ← اضافه شود
+      REVIEWS_PER_APP: "50"
+      HTTP2: "1"
       PYTHONFAULTHANDLER: "1"
-      UVLOOP_NO_EXTENSIONS: "1" 
+      UVLOOP_NO_EXTENSIONS: "1"
     command: ["python","/app/crawler.py"]
-    
+    restart: unless-stopped
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.13.4
     environment:
       ELASTICSEARCH_HOSTS: "http://es:9200"
+      XPACK_SECURITY_ENABLED: "false"
     ports: ["5601:5601"]
     depends_on:
       es:
         condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   esdata:

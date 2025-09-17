@@ -1,6 +1,7 @@
 ﻿# ./services/scraper/requirements.txt
-httpx==0.27.0
+httpx[http2]==0.27.0
 selectolax==0.3.21
 elasticsearch==8.13.1
 pydantic==2.8.2
 redis==5.0.7
+brotli
