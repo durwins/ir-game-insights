@@ -93,14 +93,6 @@ services:
       UVLOOP_NO_EXTENSIONS: "1" 
     command: ["python","/app/crawler.py"]
     
-  grafana:
-    image: grafana/grafana:11.1.0
-    ports: ["3000:3000"]
-    volumes:
-      - grafana:/var/lib/grafana
-    depends_on:
-      es:
-        condition: service_healthy
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.13.4
@@ -114,4 +106,3 @@ services:
 volumes:
   esdata:
   pgdata:
-  grafana:
