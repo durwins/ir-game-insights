@@ -1,5 +1,3 @@
-# ./docker-compose.yml
-version: "3.9"
 services:
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
@@ -11,7 +9,35 @@ services:
       memlock: { soft: -1, hard: -1 }
     volumes:
       - esdata:/usr/share/elasticsearch/data
-    ports: ["9200:9200","9300:9300"]
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9200 >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  es-init:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    depends_on:
+      es:
+        condition: service_healthy
+    entrypoint: ["/bin/sh","-lc"]
+    command: >
+      'set -e;
+       ES_URL=$${ES_URL:-http://es:9200};
+       echo "Waiting for ES...";
+       for i in $(seq 1 60); do curl -fsS "$$ES_URL" && break || sleep 2; done;
+       echo "Creating indices if missing...";
+       (curl -fsI "$$ES_URL/games"   >/dev/null || curl -fsS -X PUT "$$ES_URL/games"   -H "Content-Type: application/json" --data-binary @/mappings/games.json);
+       (curl -fsI "$$ES_URL/reviews" >/dev/null || curl -fsS -X PUT "$$ES_URL/reviews" -H "Content-Type: application/json" --data-binary @/mappings/reviews.json);
+       echo "OK";'
+    environment:
+      ES_URL: http://es:9200
+    volumes:
+      - ./elastic/mappings:/mappings:ro
+    restart: "no"
 
   postgres:
     image: postgres:15
@@ -22,39 +48,68 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d gamedata"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   redis:
     image: redis:7
     ports: ["6380:6379"]
-
-  api:
-    build: ./services/api
-    depends_on: [es, postgres, redis]
-       # placeholder
-    ports: ["8000:8000"]
-
-  worker:
-    build: ./services/worker
-    depends_on: [redis, es, postgres]
-       # placeholder
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
   scraper:
     build: ./services/scraper
-    depends_on: [es]
-       # placeholder
-
+    depends_on:
+      es:
+        condition: service_healthy
+      es-init:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    environment:
+      ES_HOST: http://es:9200
+      ES_INDEX: games
+      REDIS_URL: redis://redis:6379/0
+      CONCURRENCY: 3
+      DELAY_SEC: 4.0
+      MAX_PAGES: 600
+      MAX_APPS: 2000
+      SAME_DOMAIN_ONLY: "1"
+      # Auto-discover Myket
+      MYKET_AUTO_DISCOVER: "1"
+      MYKET_GAMES_ROOT: "https://myket.ir/games"
+      MYKET_MAX_LISTS: "300"
+      BAZAAR_AUTO_DISCOVER: "1"
+      BAZAAR_ROOT: "https://cafebazaar.ir/pages/list~app-category~game-categories"
+      BAZAAR_MAX_LISTS: "200"
+      # FOLLOW_LIST_LINKS: "0"
+      PYTHONFAULTHANDLER: "1"
+      UVLOOP_NO_EXTENSIONS: "1" 
+    command: ["python","/app/crawler.py"]
+    
   grafana:
     image: grafana/grafana:11.1.0
     ports: ["3000:3000"]
     volumes:
       - grafana:/var/lib/grafana
+    depends_on:
+      es:
+        condition: service_healthy
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.13.4
     environment:
       ELASTICSEARCH_HOSTS: "http://es:9200"
     ports: ["5601:5601"]
-    depends_on: [es]
+    depends_on:
+      es:
+        condition: service_healthy
 
 volumes:
   esdata:
