@@ -171,7 +171,7 @@ git push --tags
 ---
 
 ## اسکرین‌شات‌ها
-
+---
 | نمایی از داشبورد |
 | --- |
 | ![shot1](asserts/screenshots/shot1.png) |
