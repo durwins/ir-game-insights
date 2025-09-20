@@ -25,3 +25,4 @@ tmp/
 Thumbs.db
 scripts/*
 *.html
+*.json

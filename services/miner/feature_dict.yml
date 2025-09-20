@@ -1,0 +1,24 @@
+features:
+  offline: ["آفلاین","بدون اینترنت","offline","no internet","single player","singleplayer"]
+  online: ["آنلاین","مولتی","چند نفره","multiplayer","pvp","co-op","clan","guild","clans","leaderboard","لیگ","رنک"]
+  pvp: ["pvp","player vs player","بازیکن مقابل بازیکن","نبرد آنلاین"]
+  pve: ["pve","campaign","مرحله‌ای","داستانی","stage","level","levels","ماموریت"]
+  simple_controls: ["کنترل ساده","یک دستی","one hand","tap","tapping","tapper","swipe"]
+  progression: ["level","levels","مرحله","چالش روزانه","daily challenge","quest","ماموریت","season","event","رویداد"]
+  rewarded_ads: ["تماشای ویدئو","دیدن ویدیو","rewarded ad","reward video","ویدئوی جایزه"]
+  interstitial_ads: ["تبلیغ تمام صفحه","interstitial","میان‌برنامه"]
+  iap: ["خرید داخل برنامه","in-app purchase","iap","gem","coin","shop","store","season pass","battle pass"]
+  cosmetics: ["skin","اسکین","ظاهر","کاستوم","لباس","avatar","emote"]
+  gacha: ["gacha","چست","loot box","صندوق","کپسول"]
+  social: ["دوستان","friend","invite","دعوت","share","اشتراک گذاری","chat","چت"]
+  localization_ir: ["ایرانی","ایران","تهران","فارسی","نوروز","چهارشنبه سوری","محرم","فوتبال ایران"]
+  sports: ["football","soccer","basketball","volleyball","ورزشی","فوتبال","بسکتبال","والیبال"]
+  racing: ["racing","رانندگی","مسابقه","drift","race","car","ماشین"]
+  puzzle: ["puzzle","پازل","معمایی","match-3","match3","word","کلمات","کلمه"]
+  hyper_casual: ["runner","endless","tap to play","آسان برای یادگیری","سریع","مرحله‌های کوتاه","یک‌دستی"]
+
+marketing_terms:
+  ["بهترین","رایگان","free","خفن","هیجان‌انگیز","epic","legendary","no.1","top","برترین","جدید","آپدیت بزرگ","رویداد ویژه"]
+
+topics:
+  ["زامبی","zombie","استراتژی","strategy","tower defense","td","idle","آیدل","shooting","شوتر","farm","کشاورزی","بقا","survival","sandbox","سندباکس"]
