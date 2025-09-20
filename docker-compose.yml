@@ -95,13 +95,33 @@ services:
       BAZAAR_ROOT: "https://cafebazaar.ir/pages/list~app-category~game-categories"
       BAZAAR_MAX_LISTS: "20"
       ENABLE_REVIEWS: "1"
-      ENABLE_AJAX_REVIEWS: "1"   # ← اضافه شود
+      ENABLE_AJAX_REVIEWS: "1"
       REVIEWS_PER_APP: "50"
       HTTP2: "1"
       PYTHONFAULTHANDLER: "1"
       UVLOOP_NO_EXTENSIONS: "1"
     command: ["python","/app/crawler.py"]
     restart: unless-stopped
+
+  miner:
+    build: ./services/miner
+    depends_on:
+      es:
+        condition: service_healthy
+      es-init:
+        condition: service_completed_successfully
+    environment:
+      ES_HOST: http://es:9200
+      ES_INDEX: games
+      ES_ASSETS_INDEX: assets
+      MINER_BATCH: "500"
+      MINER_MAX_DOCS: "0"
+      # MINER_STORE: "myket"
+      # MINER_QUERY: 'genre:("casual" OR "arcade") AND rating:[4 TO *]'
+    volumes:
+      - ./services/miner/feature_dict.yml:/app/feature_dict.yml:ro
+    command: ["python","/app/miner.py"]
+    restart: "no"
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.13.4
