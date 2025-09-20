@@ -167,18 +167,14 @@ curl -X POST "http://localhost:5601/api/data_views/data_view/<DATA_VIEW_ID>/fiel
 git pull origin main
 git tag -a v0.4-feature-mining-and-modeling -m "Feature mining + modeling (+ Kibana dashboards)"
 git push --tags
-```
-نمونه نام‌گذاری: `v0.3-scraping-baseline`, `v0.4-feature-mining-and-modeling`, `v0.5-dashboard-polish`
 
 ---
 
 ## اسکرین‌شات‌ها
 
-> مسیرها نسبی به ریشه مخزن هستند. در صورت تغییر، آدرس‌ها را به‌روز کنید.
-
 | نمایی از داشبورد |
 | --- |
-| ![shot1](asserts/screenshots/shot1.bmp) |
-| ![shot2](asserts/screenshots/shot2.bmp) |
-| ![shot3](asserts/screenshots/shot3.bmp) |
+| ![shot1](asserts/screenshots/shot1.png) |
+| ![shot2](asserts/screenshots/shot2.png) |
+| ![shot3](asserts/screenshots/shot3.png) |
 
