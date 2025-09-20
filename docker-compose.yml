@@ -131,10 +131,13 @@ services:
     environment:
       ES_HOST: http://es:9200
       ES_INDEX: games
-      SUCCESS_RATING_THRESH: "4.5"
-      MIN_SAMPLES: "100"
-      BATCH_SIZE: "500"
-    restart: "no"
+      MODEL_DIR: /models
+      TOP_K_GENRES: "20"
+      TOP_K_FLAGS: "40"
+    volumes:
+      - models:/models
+    command: ["python","-c","print('analyzer ready')"]
+
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.13.4
@@ -150,3 +153,4 @@ services:
 volumes:
   esdata:
   pgdata:
+  models:
