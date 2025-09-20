@@ -1,8 +1,18 @@
 # ./services/analyzer/Dockerfile
 FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
 WORKDIR /app
+
+# system deps for pip wheels (if needed)
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
-RUN pip install -U pip && pip install -r requirements.txt
-COPY analyzer.py .
-ENV ES_HOST=http://es:9200 ES_INDEX=games SUCCESS_RATING_THRESH=4.5 MIN_SAMPLES=100 BATCH_SIZE=500
-CMD ["python","/app/analyzer.py"]
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY train.py score.py ./
+
+# default command does nothing; ما با docker compose run اجرا می‌کنیم
+CMD ["python","-c","print('analyzer ready')"]
