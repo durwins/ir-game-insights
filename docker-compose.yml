@@ -123,6 +123,19 @@ services:
     command: ["python","/app/miner.py"]
     restart: "no"
 
+  analyzer:
+    build: ./services/analyzer
+    depends_on:
+      es:
+        condition: service_healthy
+    environment:
+      ES_HOST: http://es:9200
+      ES_INDEX: games
+      SUCCESS_RATING_THRESH: "4.5"
+      MIN_SAMPLES: "100"
+      BATCH_SIZE: "500"
+    restart: "no"
+
   kibana:
     image: docker.elastic.co/kibana/kibana:8.13.4
     environment:
